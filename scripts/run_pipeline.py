@@ -16,6 +16,6 @@ job = aiplatform.PipelineJob(
     pipeline_root=PIPELINE_ROOT,
 )
 
-job.run(sync=False)
+job.submit()
 
 print("Pipeline submitted successfully.")
