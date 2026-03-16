@@ -1,0 +1,36 @@
+name: Vertex AI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Compile pipeline
+        run: |
+          python -m kfp.v2.compiler \
+          --pipeline_file pipeline/pipeline.py \
+          --output_file pipeline.json
+
+      - name: Run pipeline
+        run: python scripts/run_pipeline.py
