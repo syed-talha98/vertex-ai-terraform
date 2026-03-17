@@ -6,9 +6,18 @@ from kfp import dsl
     packages_to_install=["scikit-learn"],
 )
 def train_model():
-    from sklearn.datasets import load_iris
-    from sklearn.model_selection import train_test_split
-    from sklearn.ensemble import RandomForestClassifier
+    try:
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.ensemble import RandomForestClassifier
+    except ModuleNotFoundError:
+        import subprocess
+        import sys
+
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "scikit-learn"])
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.ensemble import RandomForestClassifier
 
     X, y = load_iris(return_X_y=True)
 
