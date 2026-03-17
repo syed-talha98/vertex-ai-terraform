@@ -7,6 +7,10 @@ on:
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: vertex-ai-pipeline-demo
+      REGION: us-central1
+      PIPELINE_ROOT: gs://vertex-ai-pipeline-demo-vertex-demo-bucket/pipeline-root
 
     steps:
       - name: Checkout repo

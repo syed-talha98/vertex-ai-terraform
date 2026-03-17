@@ -1,12 +1,21 @@
+import os
 from pathlib import Path
 
 from google.cloud import aiplatform
 
-PROJECT_ID = "vertex-ai-pipeline-demo"
-REGION = "us-central1"
-
-PIPELINE_ROOT = "gs://vertex-ai-pipeline-demo-vertex-demo-bucket/pipeline-root"
 TEMPLATE_PATH = Path(__file__).resolve().parents[1] / "pipeline.json"
+
+
+def get_required_env(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+
+PROJECT_ID = get_required_env("PROJECT_ID")
+REGION = get_required_env("REGION")
+PIPELINE_ROOT = get_required_env("PIPELINE_ROOT")
 
 aiplatform.init(project=PROJECT_ID, location=REGION)
 
