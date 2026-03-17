@@ -26,6 +26,7 @@ Main services used:
 ```text
 vertex-ai-terraform-demo
 ├── pipeline/pipeline.py        # Vertex AI pipeline definition
+├── scripts/compile_pipeline.py # Deterministic pipeline compiler
 ├── terraform/main.tf          # Terraform infrastructure
 ├── terraform/variables.tf     # Terraform variables
 ├── terraform/terraform.tfvars # Project configuration
@@ -198,9 +199,13 @@ region     = "us-central1"
 Compile the pipeline definition into `pipeline.json`:
 
 ```bash
-python -m kfp.v2.compiler \
-  --pipeline_file pipeline/pipeline.py \
-  --output_file pipeline.json
+python scripts/compile_pipeline.py
+```
+
+Optional verification:
+
+```bash
+grep -nEi "sklearn|scikit-learn" pipeline.json
 ```
 
 ## Deploy Infrastructure
@@ -246,7 +251,7 @@ The workflow runs on pushes to `main` and does the following:
 2. Sets up Python 3.11
 3. Installs dependencies
 4. Authenticates to GCP using `GCP_SA_KEY`
-5. Compiles `pipeline.json`
+5. Compiles `pipeline.json` with `scripts/compile_pipeline.py`
 6. Sets `PROJECT_ID`, `REGION`, and `PIPELINE_ROOT`
 7. Submits the Vertex AI pipeline job
 
